@@ -1,0 +1,50 @@
+// BACKUP DO ARQUIVO ORIGINAL Auth.tsx
+// Data: $(Get-Date)
+// Motivo: Backup antes de implementar solução de isolamento de formulários
+
+import React, { useState, useEffect } from "react";
+import { useNavigate, Navigate } from "react-router-dom";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/contexts/AuthContext";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import ButterflyLogo from "@/components/ButterflyLogo";
+import { Loader2, Eye, EyeOff, Bug, CheckCircle, AlertTriangle } from "lucide-react";
+import ForgotPasswordModal from "@/components/ForgotPasswordModal";
+import RoleSelectionModal from "@/components/RoleSelectionModal";
+import { useFormDiagnostics } from "@/hooks/monitoring";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
+// Login form schema
+const loginSchema = z.object({
+  email: z.string().email({ message: "Email inválido" }),
+  password: z.string().min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
+});
+
+// Signup form schema
+const signupSchema = z.object({
+  email: z.string().email({ message: "Email inválido" }),
+  username: z.string().min(3, { message: "Nome de usuário deve ter pelo menos 3 caracteres" }),
+  password: z.string().min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
+  confirmPassword: z.string().min(6, { message: "Confirme sua senha" }),
+  role: z.enum(["user", "admin", "organizer"], {
+    required_error: "Selecione um tipo de usuário",
+  }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "As senhas não coincidem",
+  path: ["confirmPassword"],
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+type SignupFormValues = z.infer<typeof signupSchema>;
+
+// ARQUIVO TRUNCADO PARA BACKUP - CONTEÚDO COMPLETO PRESERVADO NO ORIGINAL

@@ -1,0 +1,52 @@
+<!-- Botão para finalizar pedido -->
+<button id="finalizarPedidoBtn">Finalizar Pedido</button>
+
+<!-- Pop-up do QR Code -->
+<div id="pixQrCodePopup" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:9999;">
+  <div style="background:#fff; padding:30px; border-radius:8px; text-align:center; min-width:300px;">
+    <h2>Pagamento via Pix</h2>
+    <img id="qrCodeImage" alt="QR Code Pix" style="width:200px; height:200px;"/>
+    <p id="valorPedido" style="font-size:1.2em; margin:10px 0;"></p>
+    <p><b>Copia e Cola:</b> <span id="pixCopiaCola"></span></p>
+    <button onclick="navigator.clipboard.writeText(document.getElementById('pixCopiaCola').textContent)">Copiar código</button>
+    <br><br>
+    <button onclick="document.getElementById('pixQrCodePopup').style.display='none'">Fechar</button>
+  </div>
+</div>
+
+<!-- Script para buscar o QR Code e exibir o pop-up -->
+<script>
+document.getElementById('finalizarPedidoBtn').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/api/criar-pix-qrcode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                amount: 10000, // Valor em centavos (exemplo: R$ 100,00)
+                description: 'Pedido #123',
+                customer: {
+                    name: "Nome do Cliente",
+                    cellphone: "11999999999",
+                    email: "cliente@email.com",
+                    taxId: "123.456.789-00"
+                }
+            })
+        });
+        const data = await response.json();
+
+        if (data.brCodeBase64 && data.amount) {
+            document.getElementById('qrCodeImage').src = data.brCodeBase64.startsWith('data:image') 
+                ? data.brCodeBase64 
+                : `data:image/png;base64,${data.brCodeBase64}`;
+            document.getElementById('valorPedido').textContent = `Valor: R$ ${(data.amount / 100).toFixed(2).replace('.', ',')}`;
+            document.getElementById('pixCopiaCola').textContent = data.brCode;
+            document.getElementById('pixQrCodePopup').style.display = 'flex';
+        } else {
+            alert('Erro ao gerar QR Code. Tente novamente.');
+        }
+    } catch (error) {
+        console.error('Erro ao finalizar pedido:', error);
+        alert('Ocorreu um erro. Por favor, tente mais tarde.');
+    }
+});
+</script>
