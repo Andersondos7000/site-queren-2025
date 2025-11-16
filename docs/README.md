@@ -1,4 +1,4 @@
-# 📚 Documentação Técnica - Segurança SSH
+# 📚 Documentação Técnica - Infraestrutura
 
 ## 📁 Estrutura da Documentação
 
@@ -6,51 +6,63 @@ Este diretório contém toda a documentação técnica do projeto Querenhapuque.
 
 ### 📂 Subpastas
 
-- **`hetzner/`** - Documentação completa sobre segurança SSH e configuração do servidor Hetzner
+- **`hetzner/`** - Documentação sobre segurança SSH e configuração do servidor Hetzner
+- **`coolify-admin/`** - Documentação completa do Coolify Admin (credenciais, acessos e guias)
 
 ### 📄 Arquivos na pasta `hetzner/`
 
-| Arquivo | Descrição | Tamanho |
-|---------|-----------|---------|
-| **README_FINAL.md** | Resumo executivo da implementação (COMECE AQUI) | ~7 KB |
-| **PASSO_FINAL_SIMPLES.md** | Instruções finais simplificadas (1 minuto) | ~1.5 KB |
-| **SECURITY_SSH_KEYS.md** | Documentação técnica completa sobre as chaves SSH | 8.7 KB |
-| **INSTRUCOES_ADICIONAR_CHAVE_SSH.md** | Guia passo a passo detalhado | 6.4 KB |
-| **COMANDOS_RAPIDOS.md** | Comandos prontos para copiar e colar | 2.0 KB |
-| **VPS_LOGIN_INFO.txt** | Informações de acesso ao VPS | 2.2 KB |
-| **RESUMO_IMPLEMENTACAO.txt** | Resumo visual da implementação | 10.7 KB |
-| **CONCLUSAO_IMPLEMENTACAO.md** | Relatório técnico completo | ~9 KB |
+| Arquivo | Descrição |
+|---------|-----------|
+| **README_FINAL.md** | Resumo executivo da implementação SSH |
+| **PASSO_FINAL_SIMPLES.md** | Instruções finais simplificadas |
+| **SECURITY_SSH_KEYS.md** | Documentação técnica das chaves SSH |
+| **INSTRUCOES_ADICIONAR_CHAVE_SSH.md** | Guia passo a passo |
+| **COMANDOS_RAPIDOS.md** | Comandos úteis SSH |
+| **VPS_LOGIN_INFO.txt** | Informações de acesso ao VPS |
+| **RESUMO_IMPLEMENTACAO.txt** | Resumo visual da implementação |
+| **CONCLUSAO_IMPLEMENTACAO.md** | Relatório técnico completo |
+
+### 📄 Arquivos na pasta `coolify-admin/`
+
+| Arquivo | Descrição |
+|---------|-----------|
+| **README.md** | Índice completo da documentação Coolify ⭐ |
+| **CREDENCIAIS_ACESSO.md** | 🔐 Todas as senhas, tokens e acessos |
+| **CONFIGURACAO_COMPLETA.md** | ✅ Status e resumo da implementação |
+| **GUIA_RAPIDO.md** | ⚡ Ações rápidas e comandos essenciais |
 
 ---
 
 ## 🚀 Início Rápido
 
-### 📖 Por onde começar:
+### 🎯 Acesso ao Coolify Admin
 
-1. **`hetzner/README_FINAL.md`** - Resumo executivo completo
-2. **`hetzner/PASSO_FINAL_SIMPLES.md`** - Último passo (1 minuto)
-3. **`hetzner/SECURITY_SSH_KEYS.md`** - Documentação técnica completa
+**COMECE AQUI:** `coolify-admin/README.md`
 
-### ⚡ Ação Imediata:
+1. **`coolify-admin/CREDENCIAIS_ACESSO.md`** - 🔐 Senhas e acessos
+2. **`coolify-admin/GUIA_RAPIDO.md`** - ⚡ Ações imediatas
+3. **`coolify-admin/CONFIGURACAO_COMPLETA.md`** - ✅ Status completo
 
-Consulte **`hetzner/PASSO_FINAL_SIMPLES.md`** para completar a implementação (1 minuto).
+### 🔧 Configuração SSH (Hetzner)
+
+1. **`hetzner/README_FINAL.md`** - Resumo executivo
+2. **`hetzner/VPS_LOGIN_INFO.txt`** - Informações de acesso
+3. **`hetzner/SECURITY_SSH_KEYS.md`** - Documentação técnica
 
 ---
 
 ## 📖 Guias de Leitura Recomendados
 
-### Para Começar:
-1. **`hetzner/README_FINAL.md`** - Resumo executivo
-2. **`hetzner/PASSO_FINAL_SIMPLES.md`** - Ação imediata (1 minuto)
+### 🌐 Para Usar o Coolify (Prioridade):
+1. **`coolify-admin/README.md`** - Índice completo ⭐
+2. **`coolify-admin/CREDENCIAIS_ACESSO.md`** - Senhas e tokens 🔐
+3. **`coolify-admin/GUIA_RAPIDO.md`** - Comandos essenciais ⚡
+4. **`coolify-admin/CONFIGURACAO_COMPLETA.md`** - Status do sistema ✅
 
-### Para Implementar:
-3. **`hetzner/VPS_LOGIN_INFO.txt`** - Informações de acesso
-4. **`hetzner/INSTRUCOES_ADICIONAR_CHAVE_SSH.md`** - Guia detalhado
-5. **`hetzner/COMANDOS_RAPIDOS.md`** - Comandos úteis
-
-### Para Referência:
-6. **`hetzner/SECURITY_SSH_KEYS.md`** - Documentação técnica completa
-7. **`hetzner/CONCLUSAO_IMPLEMENTACAO.md`** - Relatório técnico
+### 🔧 Para Administração SSH:
+5. **`hetzner/VPS_LOGIN_INFO.txt`** - Credenciais de acesso
+6. **`hetzner/SECURITY_SSH_KEYS.md`** - Documentação técnica
+7. **`hetzner/COMANDOS_RAPIDOS.md`** - Comandos úteis SSH
 
 ---
 
@@ -88,7 +100,7 @@ Consulte **`hetzner/PASSO_FINAL_SIMPLES.md`** para completar a implementação (
 ## 📊 Status da Implementação
 
 ```
-Progresso: 95% Completo
+Progresso: 100% Completo ✅
 
 ┌─────────────────────────────────────┐
 │ ✅ Gerar chave Ed25519              │
@@ -96,10 +108,14 @@ Progresso: 95% Completo
 │ ✅ Remover chave antiga             │
 │ ✅ Configurar SSH config            │
 │ ✅ Aplicar permissões               │
-│ ✅ Criar documentação               │
-│ ⏳ Adicionar chave ao servidor      │
-│ ⏳ Testar conexão                   │
+│ ✅ Adicionar chave ao servidor      │
+│ ✅ Configurar Coolify Admin         │
+│ ✅ Instalar Docker Engine           │
+│ ✅ Validar servidor                 │
+│ ✅ Criar documentação completa      │
 └─────────────────────────────────────┘
+
+🎉 SISTEMA TOTALMENTE OPERACIONAL
 ```
 
 ---
@@ -124,12 +140,20 @@ ssh root@49.12.204.185
 
 ---
 
-## 📞 Suporte
+## 📞 Suporte e Links
 
-Para mais informações, consulte:
-- **Documentação Completa:** `SECURITY_SSH_KEYS.md`
-- **Instruções Detalhadas:** `INSTRUCOES_ADICIONAR_CHAVE_SSH.md`
-- **Hetzner Console:** https://console.hetzner.com/projects/12020010
+### Coolify Admin:
+- **Painel:** https://coolify-admin.ouvir.online
+- **Servidor VPS:** https://coolify-admin.ouvir.online/server/j8skk40s4ks048coog8gw08c
+- **Documentação:** `coolify-admin/README.md`
+
+### Hetzner:
+- **Console:** https://console.hetzner.com/projects/12020010/servers/110118995
+- **Documentação SSH:** `hetzner/SECURITY_SSH_KEYS.md`
+
+### Recursos Externos:
+- **Coolify Docs:** https://coolify.io/docs
+- **Hetzner Support:** https://console.hetzner.com/support
 
 ---
 
@@ -148,7 +172,8 @@ Para mais informações, consulte:
 ---
 
 **Data de Criação:** 16/11/2025  
-**Última Atualização:** 16/11/2025  
+**Última Atualização:** 16/11/2025 - 18:15  
 **Projeto:** Querenhapuque  
-**Servidor:** Collify-admin (49.12.204.185)
+**Servidor:** Collify-admin (49.12.204.185)  
+**Status:** ✅ Sistema 100% Operacional
 

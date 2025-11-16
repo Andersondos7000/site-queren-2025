@@ -12,6 +12,13 @@ nodejs-portable/
 .env.*
 !.env.example
 
+# Credenciais e informações sensíveis
+docs/coolify-admin/CREDENCIAIS_ACESSO.md
+docs/hetzner/VPS_LOGIN_INFO.txt
+**/CREDENCIAIS*.md
+**/SENHAS*.txt
+**/*_LOGIN_INFO.txt
+
 # Build
 dist/
 dist-ssr/
