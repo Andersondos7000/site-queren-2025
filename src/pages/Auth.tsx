@@ -14,7 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Separator } from "@/components/ui/separator";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import emailLogoUrl from "../../docs/modal/borboleta modal email.svg";
+import emailLogoUrl from "/borboleta-modal-email.svg";
 import { Eye, EyeOff, Chrome } from "lucide-react";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import RoleSelectionModal from "@/components/RoleSelectionModal";
