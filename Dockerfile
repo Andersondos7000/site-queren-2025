@@ -1,32 +1,8 @@
-# Estágio 1: Build da aplicação
-FROM node:20-alpine AS builder
-
+FROM node:20-alpine
 WORKDIR /app
-
-# Copiar arquivos de dependências
 COPY package*.json ./
-
-# Instalar dependências
-RUN npm install --production=false
-
-# Copiar código fonte
+RUN npm ci --only=production && npm i -g serve
 COPY . .
-
-# Build da aplicação
 RUN npm run build
-
-# Estágio 2: Servidor de produção com Nginx
-FROM nginx:alpine
-
-# Copiar arquivos buildados
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copiar configuração customizada do Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expor porta 80
-EXPOSE 80
-
-# Iniciar Nginx
-CMD ["nginx", "-g", "daemon off;"]
-
+EXPOSE 3000
+CMD ["serve", "-s", "dist", "-l", "3000"]    feat: usar Node serve na porta 3000  Muda Dockerfile para servir dist via serve em 3000 (sem Nginx).
