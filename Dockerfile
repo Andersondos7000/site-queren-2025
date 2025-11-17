@@ -1,8 +1,13 @@
-FROM node:20-alpine
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production && npm i -g serve
+RUN npm install
 COPY . .
 RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+RUN npm i -g serve
+COPY --from=builder /app/dist /app/dist
 EXPOSE 3000
-CMD ["serve", "-s", "dist", "-l", "3000"]    feat: usar Node serve na porta 3000  Muda Dockerfile para servir dist via serve em 3000 (sem Nginx).
+CMD ["serve", "-s", "dist", "-l", "3000"]
