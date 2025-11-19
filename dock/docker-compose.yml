@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  querenhapuque:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: querenhapuque-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+      - VITE_SUPABASE_URL=https://ojxmfxbflbfinodkhixk.supabase.co
+      - VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeG1meGJmbGJmaW5vZGtoaXhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ5MjUwODAsImV4cCI6MjA3MDUwMTA4MH0.CNziCYvVGA3EUXSJfigtSGuYYiOn7wGE9FfBxlLsE-o
+      - VITE_APP_NAME=Borboleta Eventos Loja
+      - VITE_APP_VERSION=3.0.0
+    networks:
+      - querenhapuque-network
+
+networks:
+  querenhapuque-network:
+    driver: bridge

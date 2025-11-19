@@ -125,12 +125,12 @@ const AdminClothingGrouped = () => {
   const toggleGroupSelection = (group: any, checked: boolean) => {
     if (group.items) {
       group.items.forEach((item: any) => {
-        const id = item.display_id || item.id;
+        const realId = item.original_id || item.id;
         const next = new Set(selectedItems);
         if (checked) {
-          next.add(id);
+          next.add(realId);
         } else {
-          next.delete(id);
+          next.delete(realId);
         }
         setSelectedItems(next);
       });
@@ -272,7 +272,7 @@ const AdminClothingGrouped = () => {
       const allItemIds = new Set<string>();
       clothingGroups.forEach(group => {
         if (group.items) {
-          group.items.forEach(item => allItemIds.add(item.id));
+          group.items.forEach(item => allItemIds.add(item.original_id || item.id));
         }
       });
       setSelectedItems(allItemIds);
@@ -286,8 +286,10 @@ const AdminClothingGrouped = () => {
 
     setIsDeleting(true);
     try {
-      const { error } = await supabase
-        .from('clothing_items')
+      const { getSupabaseClient } = await import('@/lib/supabaseAdmin');
+      const admin = getSupabaseClient(true);
+      const { error } = await admin
+        .from('order_items')
         .delete()
         .in('id', Array.from(selectedItems));
 
@@ -432,7 +434,9 @@ const AdminClothingGrouped = () => {
                 <div className="space-y-2">
                   {clothingGroups.map((group: any) => {
                     const isExpanded = expandedPackages.has(group.id);
-                    const allSelected = group.items && group.items.length > 0 && group.items.every((item: any) => selectedItems.has(item.display_id || item.id));
+                    const selectedCount = group.items ? group.items.filter((item: any) => selectedItems.has(item.original_id || item.id)).length : 0;
+                    const isGroupFullySelected = group.items && group.items.length > 0 && selectedCount === group.items.length;
+                    const isGroupPartiallySelected = group.items && group.items.length > 0 && selectedCount > 0 && selectedCount < group.items.length;
                     const getStatusBadgeClass = (status: string) => {
                       if (status === 'paid' || status === 'confirmed') return 'bg-green-100 text-green-800';
                       if (status === 'pending') return 'bg-yellow-100 text-yellow-800';
@@ -452,11 +456,11 @@ const AdminClothingGrouped = () => {
                       <div key={group.id} className="border rounded-lg overflow-hidden">
                         <div className="flex items-center justify-between p-4">
                           <div className="flex items-center gap-4 flex-1 min-w-0">
-                            <input
-                              type="checkbox"
-                              checked={allSelected}
-                              onChange={(e) => toggleGroupSelection(group, e.target.checked)}
-                              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            <Checkbox
+                              checked={isGroupFullySelected ? true : isGroupPartiallySelected ? 'indeterminate' : false}
+                              onCheckedChange={(c) => toggleGroupSelection(group, Boolean(c))}
+                              aria-label={`Selecionar grupo ${group.id}`}
+                              className="rounded"
                               onClick={(e) => e.stopPropagation()}
                             />
                             <div
@@ -495,11 +499,11 @@ const AdminClothingGrouped = () => {
                                 return (
                                   <div key={item.display_id || item.id || index} className="flex items-center justify-between p-3 bg-white rounded-lg border">
                                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                                      <input
-                                        type="checkbox"
-                                        checked={selectedItems.has(item.display_id || item.id)}
-                                        onChange={(e) => handleSelectItem(item.display_id || item.id)}
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                      <Checkbox
+                                        checked={selectedItems.has(item.original_id || item.id)}
+                                        onCheckedChange={() => handleSelectItem(item.original_id || item.id)}
+                                        aria-label={`Selecionar item ${(item.original_id || item.id)}`}
+                                        className="rounded"
                                         onClick={(e) => e.stopPropagation()}
                                       />
                                       <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">

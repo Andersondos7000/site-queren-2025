@@ -4,13 +4,11 @@
 
 ### Login Web
 1. Acesse: https://coolify-admin.ouvir.online
-2. Email: `fotosartdesign@gmail.com`
-3. Senha: `Sampa1503001$`
+2. Credenciais: consulte `CREDENCIAIS_ACESSO.md`
 
-### SSH Direto
+### SSH Direto (chave pública)
 ```bash
-ssh root@49.12.204.185
-# Senha: TxWf3TUwHkUR
+ssh -i C:\Users\Anderson\.ssh\vps-deploy-key-ed25519 root@49.12.204.185
 ```
 
 ---
@@ -39,6 +37,9 @@ ssh root@49.12.204.185
 1. **Servers** → **VPS-Hetzner-Production**
 2. Aba **"Terminal"**
 3. Terminal web disponível
+4. Recomendações:
+   - Adicione chaves públicas em `~/.ssh/authorized_keys`
+   - Evite uso de senha; mantenha `PasswordAuthentication no`
 
 ### 5. Ver Métricas e Logs
 1. **Servers** → **VPS-Hetzner-Production**
@@ -117,9 +118,19 @@ Informações disponíveis:
 
 ## 🔐 SEGURANÇA
 
-### Gerenciar Chaves SSH
-**URL:** https://coolify-admin.ouvir.online/security/private-key
+### Chaves SSH no servidor
+- Local: `~/.ssh/authorized_keys`
+- Ativas: `coolify`, `hetzner-server-access`, `vps-deploy-key-ed25519`
 
+### Fail2Ban
+- Status da jail `sshd`:
+```bash
+sudo fail2ban-client status sshd
+```
+- Logs:
+```bash
+sudo tail -n 50 /var/log/auth.log
+```
 ### Ver Tokens de API
 **URL:** https://coolify-admin.ouvir.online/security/api-tokens
 

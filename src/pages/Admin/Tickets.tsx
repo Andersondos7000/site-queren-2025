@@ -271,15 +271,14 @@ const AdminTickets = () => {
   };
 
   // Função para selecionar todos
-  const handleSelectAllTickets = () => {
-    if (selectAllTickets) {
-      // Desselecionar todos
-      setSelectedTickets(new Set());
-      setSelectAllTickets(false);
-    } else {
-      // Selecionar todos
+  const handleSelectAllTickets = (checked?: boolean) => {
+    const shouldSelectAll = typeof checked === 'boolean' ? checked : !selectAllTickets;
+    if (shouldSelectAll) {
       setSelectedTickets(new Set(getAllTicketIds));
       setSelectAllTickets(true);
+    } else {
+      setSelectedTickets(new Set());
+      setSelectAllTickets(false);
     }
   };
 
@@ -477,11 +476,10 @@ const AdminTickets = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center space-x-4">
                     <label className="flex items-center space-x-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={selectAllTickets}
-                        onChange={handleSelectAllTickets}
-                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      <Checkbox
+                        checked={selectAllTickets ? true : selectedTickets.size > 0 ? 'indeterminate' : false}
+                        onCheckedChange={(c) => handleSelectAllTickets(Boolean(c))}
+                        aria-label="Selecionar todos os tickets"
                       />
                       <span className="text-sm font-medium">
                         Selecionar todos ({tickets.length} tickets)
@@ -543,25 +541,18 @@ const AdminTickets = () => {
                         {/* Linha principal do grupo */}
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4">
                           <div className="flex items-center space-x-2 flex-1">
-                            <input
-                              type="checkbox"
-                              checked={isGroupFullySelected}
-                              ref={(input) => {
-                                if (input) input.indeterminate = isGroupPartiallySelected;
-                              }}
-                              onChange={(e) => {
-                                e.stopPropagation();
-                                const isChecked = e.target.checked;
-                                console.log('📦 Checkbox do GRUPO:', { 
-                                  groupId: group.id, 
-                                  isChecked, 
-                                  ticketsCount: group.tickets.length 
+                            <Checkbox
+                              checked={isGroupFullySelected ? true : isGroupPartiallySelected ? 'indeterminate' : false}
+                              onCheckedChange={(checked) => {
+                                const isChecked = Boolean(checked);
+                                console.log('📦 Checkbox do GRUPO:', {
+                                  groupId: group.id,
+                                  isChecked,
+                                  ticketsCount: group.tickets.length
                                 });
-                                
                                 // Atualizar todos os tickets do grupo de uma vez
                                 setSelectedTickets(prevSelected => {
                                   const newSelected = new Set(prevSelected);
-                                  
                                   group.tickets.forEach(ticket => {
                                     if (isChecked) {
                                       newSelected.add(ticket.id);
@@ -569,14 +560,12 @@ const AdminTickets = () => {
                                       newSelected.delete(ticket.id);
                                     }
                                   });
-                                  
                                   // Atualizar "selecionar todos"
                                   setSelectAllTickets(newSelected.size === getAllTicketIds.length && getAllTicketIds.length > 0);
-                                  
                                   return newSelected;
                                 });
                               }}
-                              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                              aria-label={`Selecionar grupo ${group.id}`}
                             />
                           {group.type === 'package' && (
                             <span
@@ -647,20 +636,18 @@ const AdminTickets = () => {
                               >
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4">
                                   <div className="flex items-center space-x-4 flex-1">
-                                    <input
-                                      type="checkbox"
+                                    <Checkbox
                                       checked={isSelected}
-                                      onChange={(e) => {
-                                        e.stopPropagation();
-                                        const newCheckedState = e.target.checked;
-                                        console.log('🎯 Checkbox onChange:', { 
-                                          ticketId: ticket.id.slice(0, 13), 
-                                          isSelected, 
-                                          newCheckedState 
+                                      onCheckedChange={(checked) => {
+                                        const newCheckedState = Boolean(checked);
+                                        console.log('🎯 Checkbox onChange:', {
+                                          ticketId: ticket.id.slice(0, 13),
+                                          isSelected,
+                                          newCheckedState
                                         });
                                         handleTicketSelection(ticket.id, newCheckedState);
                                       }}
-                                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                                      aria-label={`Selecionar ticket ${ticket.id.slice(0, 13)}`}
                                     />
                                     <div className={`font-medium min-w-[120px] ${isSelected ? 'text-blue-700' : ''}`}>
                                       Ticket #{index + 1}

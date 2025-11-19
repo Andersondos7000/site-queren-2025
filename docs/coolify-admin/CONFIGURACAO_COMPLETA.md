@@ -19,18 +19,19 @@
 
 ### 3. Chaves SSH Configuradas
 
-**Chave Utilizada:** `chave do localhost` (Coolify)
-- **Tipo:** Ed25519
-- **Chave Pública:** `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ7C7plWcdwJZKjU1Annwv0rEPqcWD62kdbSUONxReVK coolify`
-- **Status:** ✅ Autenticação funcionando perfeitamente
+**Método de autenticação:** Chave pública (Ed25519). Senhas desativadas.
 
-**Chaves Adicionais no Servidor:**
-- Chave Ed25519 criada localmente também adicionada como backup
+**Chaves atualmente ativas em `~/.ssh/authorized_keys`:**
+- `ssh-ed25519 ... coolify`
+- `ssh-ed25519 ... hetzner-server-access`
+- `ssh-ed25519 ... vps-deploy-key-ed25519`
+
+Observação: chaves RSA legadas foram removidas.
 
 ### 4. Funcionalidades Disponíveis
 
 ✅ **Configuração** - Ajustes gerais do servidor
-✅ **Proxy** - Gerenciamento de proxy reverso
+✅ **Proxy** - Gerenciamento de proxy reverso (via Coolify)
 ✅ **Recursos** - Monitoramento de aplicações
 ✅ **Terminal** - Acesso SSH via web
 ✅ **Segurança** - Gerenciamento de patches
@@ -68,13 +69,14 @@ Agora você pode:
 
 ### 4. Acessar via Terminal
 
-Para acesso SSH direto ao servidor:
+Para acesso SSH direto ao servidor com chave pública:
 
 ```powershell
-ssh root@49.12.204.185
+ssh -i C:\Users\Anderson\.ssh\vps-deploy-key-ed25519 root@49.12.204.185
 ```
 
-(Use a senha: `TxWf3TUwHkUR`)
+Para acesso via Coolify:
+- `Servers → VPS-Hetzner-Production → Terminal` (conexão web com o host)
 
 ## 📊 CONFIGURAÇÕES TÉCNICAS
 
@@ -93,10 +95,15 @@ ssh root@49.12.204.185
 - **Tipo:** Standalone (não Swarm)
 - **Limpeza Automática:** Configurável
 
+### Fail2Ban (Proteção SSH)
+- **Status:** habilitado e ativo (`jail: sshd`)
+- **Arquivo:** `/etc/fail2ban/jail.local`
+- **Parâmetros:** `bantime=3600`, `findtime=600`, `maxretry=5`
+
 ## 🎯 OBJETIVO ALCANÇADO
 
 ✅ Servidor Hetzner conectado ao Coolify
-✅ Acesso SSH seguro configurado
+✅ Acesso SSH seguro configurado (chave pública + Fail2Ban)
 ✅ Docker instalado e pronto
 ✅ Interface de gerenciamento acessível
 ✅ Pronto para deploy de aplicações
@@ -118,7 +125,7 @@ Toda a documentação técnica está em: `docs/hetzner/`
 - **Documentação Coolify:** https://coolify.io/docs
 
 ---
-
-**Data de Conclusão:** 16/11/2025 às 18:09 (horário do servidor)
-**Status:** ✅ Totalmente Operacional
+**Data de Conclusão:** 16/11/2025
+**Atualização:** 18/11/2025 (endurecimento de SSH e Fail2Ban)
+**Status:** ✅ Operacional e protegido
 

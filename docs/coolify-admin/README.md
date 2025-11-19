@@ -23,14 +23,55 @@ Documentação completa do servidor Coolify Admin na Hetzner Cloud.
 
 ### 🌐 Painel Web
 **URL:** https://coolify-admin.ouvir.online
-- Email: `fotosartdesign@gmail.com`
-- Senha: `Sampa1503001$`
+- Credenciais: consulte `CREDENCIAIS_ACESSO.md`
 
 ### 🖥️ Acesso SSH
 ```bash
-ssh root@49.12.204.185
-# Senha: TxWf3TUwHkUR
+ssh -i C:\Users\Anderson\.ssh\vps-deploy-key-ed25519 root@49.12.204.185
 ```
+Observação: autenticação por chave pública ativa; senhas desativadas.
+
+## 🔐 Acesso via SSH — Guia Completo
+
+### Direto (chave pública)
+- Pré-requisito: chave privada em `C:\Users\Anderson\.ssh\vps-deploy-key-ed25519` e chave pública correspondente no servidor (`~/.ssh/authorized_keys`).
+- Conexão:
+```bash
+ssh -i C:\Users\Anderson\.ssh\vps-deploy-key-ed25519 root@49.12.204.185
+```
+- Verificações úteis:
+```bash
+whoami && hostname
+fail2ban-client status sshd
+```
+
+### Por dentro do Coolify (Terminal Web)
+- Caminho: `Servers → VPS-Hetzner-Production → Terminal → Connect`.
+- Executa comandos no host via SSH usando a chave do Coolify.
+- Exemplos:
+```bash
+tail -n 5 ~/.ssh/authorized_keys
+grep -E '^PubkeyAuthentication|^PasswordAuthentication' /etc/ssh/sshd_config
+```
+
+### Configuração opcional de SSH (Windows OpenSSH)
+Arquivo: `C:\Users\Anderson\.ssh\config`
+```
+Host vps-hetzner
+  HostName 49.12.204.185
+  User root
+  IdentityFile C:\Users\Anderson\.ssh\vps-deploy-key-ed25519
+  IdentitiesOnly yes
+```
+Uso:
+```bash
+ssh vps-hetzner
+```
+
+### Troubleshooting
+- `Permission denied (publickey)`: verifique se sua chave pública está em `~/.ssh/authorized_keys` e permissões (dir `700`, arquivo `600`).
+- Bloqueio por `fail2ban`: confira `fail2ban-client status sshd`; se necessário, desbanir seu IP com `fail2ban-client unban <SEU_IP>`.
+- Checar logs: `tail -n 50 /var/log/auth.log`.
 
 ### 🔗 Links Principais
 - **Dashboard:** https://coolify-admin.ouvir.online
@@ -46,11 +87,21 @@ ssh root@49.12.204.185
 - **Tipo:** cx32 (4 vCPU, 8 GB RAM, 80 GB Disk)
 - **Status:** ✅ Operacional
 
+### Segurança SSH e Fail2Ban
+- Chaves ativas em `~/.ssh/authorized_keys`:
+  - `ssh-ed25519 ... coolify`
+  - `ssh-ed25519 ... hetzner-server-access`
+  - `ssh-ed25519 ... vps-deploy-key-ed25519`
+- `fail2ban` instalado e ativo com jail `sshd`.
+- Verificação rápida:
+  - `fail2ban-client status sshd`
+  - `tail -n 50 /var/log/auth.log`
+
 ## 🔧 Serviços Ativos
 
 - ✅ **Docker Engine** - Gerenciamento de containers
 - ✅ **Coolify** - Plataforma de deploy
-- ✅ **Traefik Proxy** - Proxy reverso (configurado)
+- ✅ **Proxy** - Configurado e gerenciável via Coolify
 - ✅ **Sentinel** - Monitoramento e métricas
 
 ## 🚀 Funcionalidades
@@ -67,6 +118,10 @@ ssh root@49.12.204.185
 - Backups automáticos
 - Logs centralizados
 - Métricas e monitoramento
+
+### Acesso Hetzner via Coolify
+- Navegue até: `Servers → VPS-Hetzner-Production → Terminal`.
+- O terminal web conecta no servidor e permite comandos administrativos.
 
 ### Rede
 - Proxy reverso automático
@@ -93,8 +148,8 @@ Toda a documentação relacionada ao servidor Hetzner está em: `../hetzner/`
 - Arquivo `CREDENCIAIS_ACESSO.md` contém informações sensíveis
 - **NÃO compartilhe** em repositórios públicos
 - Mantenha backups em local seguro
-- Altere senhas periodicamente
-- Use autenticação de dois fatores quando possível
+- Prefira autenticação por chave pública (Ed25519)
+- Fail2Ban ativo protegendo o SSH
 
 ## 🆘 Suporte
 
@@ -125,5 +180,5 @@ Toda a documentação relacionada ao servidor Hetzner está em: `../hetzner/`
 
 **Última Atualização:** 16/11/2025
 **Versão:** 1.0
-**Status:** ✅ Documentação Completa
+**Status:** ✅ Documentação atualizada com acesso por chave e endurecimento de SSH
 

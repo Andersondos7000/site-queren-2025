@@ -14,7 +14,8 @@ const customStorage = {
   removeItem: (key: string) => localStorage.removeItem(key),
 };
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+const existingClient = typeof window !== 'undefined' ? (window as any).__supabaseClient : undefined;
+export const supabase = existingClient || createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
@@ -36,6 +37,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     },
   },
 });
+
+if (typeof window !== 'undefined') {
+  (window as any).__supabaseClient = supabase;
+}
 
 // Função para limpar todos os dados de autenticação
 export const clearAuthData = () => {

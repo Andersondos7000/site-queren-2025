@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "brevo_all": {
+      "env": {
+        "BREVO_API_KEY": "sua_chave_brevo_aqui"
+      }
+    },
+    "ecommerce": {
+      "env": {
+        "ECOMMERCE_API_KEY": "sua_chave_ecommerce_aqui"
+      }
+    }
+  }
+}

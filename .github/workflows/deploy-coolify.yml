@@ -1,0 +1,66 @@
+name: Deploy to Coolify
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Docker image tag
+        required: false
+        default: latest
+      healthcheck_url:
+        description: URL para healthcheck pós-deploy
+        required: false
+concurrency:
+  group: coolify-deploy
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/borboleta-eventos-loja:${{ github.sha }},ghcr.io/${{ github.repository_owner }}/borboleta-eventos-loja:${{ inputs.tag || 'latest' }}
+          build-args: |
+            VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}
+            VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
+            VITE_APP_NAME=${{ secrets.VITE_APP_NAME }}
+            VITE_APP_VERSION=${{ secrets.VITE_APP_VERSION }}
+      - name: Trigger Coolify redeploy
+        id: redeploy
+        run: |
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${{ secrets.COOLIFY_DEPLOY_URL }}")
+          echo "HTTP_CODE=$CODE" >> $GITHUB_OUTPUT
+          if [ "$CODE" -lt 200 ] || [ "$CODE" -ge 300 ]; then
+            echo "Coolify redeploy failed with HTTP $CODE"
+            exit 1
+          fi
+      - name: Healthcheck
+        if: ${{ inputs.healthcheck_url != '' || secrets.APP_HEALTHCHECK_URL != '' }}
+        run: |
+          URL="${{ inputs.healthcheck_url || secrets.APP_HEALTHCHECK_URL }}"
+          echo "Checking $URL"
+          for i in {1..10}; do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            if [ "$CODE" -ge 200 ] && [ "$CODE" -lt 400 ]; then
+              echo "Healthy ($CODE)"
+              exit 0
+            fi
+            sleep 6
+          done
+          echo "Healthcheck failed"
+          exit 1

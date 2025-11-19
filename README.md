@@ -258,3 +258,7 @@ Para suporte, envie um email para [seu-email] ou abra uma issue no GitHub.
 
 **Desenvolvido com ❤️ para eventos incríveis! 🦋**
 
+
+
+
+

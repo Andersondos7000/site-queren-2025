@@ -8,6 +8,7 @@ Este diretório contém toda a documentação técnica do projeto Querenhapuque.
 
 - **`hetzner/`** - Documentação sobre segurança SSH e configuração do servidor Hetzner
 - **`coolify-admin/`** - Documentação completa do Coolify Admin (credenciais, acessos e guias)
+- **`docker/`** - Documentação completa sobre Docker e Docker Compose
 
 ### 📄 Arquivos na pasta `hetzner/`
 
@@ -31,6 +32,16 @@ Este diretório contém toda a documentação técnica do projeto Querenhapuque.
 | **CONFIGURACAO_COMPLETA.md** | ✅ Status e resumo da implementação |
 | **GUIA_RAPIDO.md** | ⚡ Ações rápidas e comandos essenciais |
 
+### 📄 Arquivos na pasta `docker/`
+
+| Arquivo | Descrição |
+|---------|-----------|
+| **README.md** | 🐳 Índice da documentação Docker |
+| **SETUP_COMPLETO.md** | 🏗️ Configuração detalhada e arquitetura |
+| **COMANDOS_UTEIS.md** | 🛠️ Comandos Docker do dia a dia |
+| **DEPLOY_SERVIDOR.md** | 🌐 Deploy no servidor Hetzner |
+| **TROUBLESHOOTING.md** | 🐛 Solução de problemas comuns |
+
 ---
 
 ## 🚀 Início Rápido
@@ -48,6 +59,15 @@ Este diretório contém toda a documentação técnica do projeto Querenhapuque.
 1. **`hetzner/README_FINAL.md`** - Resumo executivo
 2. **`hetzner/VPS_LOGIN_INFO.txt`** - Informações de acesso
 3. **`hetzner/SECURITY_SSH_KEYS.md`** - Documentação técnica
+
+### 🐳 Docker e Deploy
+
+**COMECE AQUI:** `docker/README.md`
+
+1. **`docker/SETUP_COMPLETO.md`** - 🏗️ Arquitetura e configuração
+2. **`docker/COMANDOS_UTEIS.md`** - 🛠️ Comandos do dia a dia
+3. **`docker/DEPLOY_SERVIDOR.md`** - 🌐 Deploy no Hetzner
+4. **`docker/TROUBLESHOOTING.md`** - 🐛 Solução de problemas
 
 ---
 
