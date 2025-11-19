@@ -50,9 +50,9 @@ jobs:
             exit 1
           fi
       - name: Healthcheck
-        if: ${{ inputs.healthcheck_url != '' || secrets.APP_HEALTHCHECK_URL != '' }}
+        if: ${{ github.event.inputs.healthcheck_url != '' || secrets.APP_HEALTHCHECK_URL != '' }}
         run: |
-          URL="${{ inputs.healthcheck_url || secrets.APP_HEALTHCHECK_URL }}"
+          URL="${{ github.event.inputs.healthcheck_url || secrets.APP_HEALTHCHECK_URL }}"
           echo "Checking $URL"
           for i in {1..10}; do
             CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
