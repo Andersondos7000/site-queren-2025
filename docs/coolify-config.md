@@ -5,7 +5,7 @@
 
 ## Pré-requisitos
 - Acesso à Área do Cliente da SuperDomínios para o domínio `querenhapuque.com`.
-- Acesso ao Coolify Admin (`https://coolify-admin.ouvir.online/`) com permissões de edição.
+- Acesso ao Coolify Admin (`https://coolify.querenhapuque.com/`) com permissões de edição.
 
 ## Passo 1 — DNS (SuperDomínios)
 - Abra “Meus Domínios” → selecione `querenhapuque.com` → “Gerenciar Domínio”.

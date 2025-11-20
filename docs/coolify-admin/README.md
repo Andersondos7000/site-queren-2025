@@ -22,7 +22,7 @@ Documentação completa do servidor Coolify Admin na Hetzner Cloud.
 ## 🎯 Acesso Rápido
 
 ### 🌐 Painel Web
-**URL:** https://coolify-admin.ouvir.online
+**URL:** https://coolify.querenhapuque.com/
 - Credenciais: consulte `CREDENCIAIS_ACESSO.md`
 
 ### 🖥️ Acesso SSH
@@ -74,9 +74,9 @@ ssh vps-hetzner
 - Checar logs: `tail -n 50 /var/log/auth.log`.
 
 ### 🔗 Links Principais
-- **Dashboard:** https://coolify-admin.ouvir.online
-- **Servidor VPS:** https://coolify-admin.ouvir.online/server/j8skk40s4ks048coog8gw08c
-- **Projetos:** https://coolify-admin.ouvir.online/projects
+- **Dashboard:** https://coolify.querenhapuque.com/
+- **Servidor VPS:** https://coolify.querenhapuque.com/server/j8skk40s4ks048coog8gw08c
+- **Projetos:** https://coolify.querenhapuque.com/projects
 - **Hetzner Console:** https://console.hetzner.com/projects/12020010/servers/110118995
 
 ## 📊 Informações do Servidor

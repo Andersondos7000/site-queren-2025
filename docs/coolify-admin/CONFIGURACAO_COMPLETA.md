@@ -12,7 +12,7 @@
 
 ### 2. Coolify Instalado e Funcionando
 
-- **URL Admin:** https://coolify-admin.ouvir.online/server/j8skk40s4ks048coog8gw08c
+- **URL Admin:** https://coolify.querenhapuque.com/server/j8skk40s4ks048coog8gw08c
 - **Docker Engine:** ✅ Instalado
 - **Sentinel:** ✅ Ativo e sincronizado
 - **Proxy:** Configurado (pronto para iniciar)
@@ -83,7 +83,7 @@ Para acesso via Coolify:
 ### Sentinel (Agente de Monitoramento)
 
 - **Status:** Em sincronia
-- **URL Coolify:** https://coolify-admin.ouvir.online
+- **URL Coolify:** https://coolify.querenhapuque.com/
 - **Taxa de Métricas:** 10 segundos
 - **Histórico de Métricas:** 7 dias
 - **Intervalo de Pressionamento:** 60 segundos
@@ -119,8 +119,8 @@ Toda a documentação técnica está em: `docs/hetzner/`
 
 ## 🔗 LINKS ÚTEIS
 
-- **Coolify Admin:** https://coolify-admin.ouvir.online
-- **Servidor VPS:** https://coolify-admin.ouvir.online/server/j8skk40s4ks048coog8gw08c
+- **Coolify Admin:** https://coolify.querenhapuque.com/
+- **Servidor VPS:** https://coolify.querenhapuque.com/server/j8skk40s4ks048coog8gw08c
 - **Hetzner Console:** https://console.hetzner.com/projects/12020010/servers/110118995
 - **Documentação Coolify:** https://coolify.io/docs
 

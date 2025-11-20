@@ -15,7 +15,7 @@ Este guia mostra como fazer o deploy da aplicação Querenhapuque no servidor He
 
 **Servidor Coolify Admin:**
 - **IP:** 49.12.204.185
-- **URL:** https://coolify-admin.ouvir.online
+- **URL:** https://coolify.querenhapuque.com/
 - **Usuário:** fotosartdesign@gmail.com
 - **Senha:** Sampa1503001$
 
@@ -23,7 +23,7 @@ Este guia mostra como fazer o deploy da aplicação Querenhapuque no servidor He
 
 ### Passo 1: Acessar Coolify Admin
 
-1. Acesse: https://coolify-admin.ouvir.online
+1. Acesse: https://coolify.querenhapuque.com/
 2. Faça login com as credenciais acima
 
 ### Passo 2: Configurar Build Type

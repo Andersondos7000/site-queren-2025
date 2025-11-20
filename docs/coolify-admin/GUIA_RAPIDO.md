@@ -3,7 +3,7 @@
 ## 🚀 ACESSO IMEDIATO
 
 ### Login Web
-1. Acesse: https://coolify-admin.ouvir.online
+1. Acesse: https://coolify.querenhapuque.com/
 2. Credenciais: consulte `CREDENCIAIS_ACESSO.md`
 
 ### SSH Direto (chave pública)
@@ -100,7 +100,7 @@ systemctl restart docker
 ## 📊 MONITORAMENTO
 
 ### Ver Status do Servidor
-**URL:** https://coolify-admin.ouvir.online/server/j8skk40s4ks048coog8gw08c
+**URL:** https://coolify.querenhapuque.com/server/j8skk40s4ks048coog8gw08c
 
 Informações disponíveis:
 - ✅ Status da conexão
@@ -132,7 +132,7 @@ sudo fail2ban-client status sshd
 sudo tail -n 50 /var/log/auth.log
 ```
 ### Ver Tokens de API
-**URL:** https://coolify-admin.ouvir.online/security/api-tokens
+**URL:** https://coolify.querenhapuque.com/security/api-tokens
 
 ### Criar Novo Token de API
 1. **Security** → **API Tokens**
@@ -211,11 +211,11 @@ Server → Docker Cleanup → Run Cleanup
 
 | Recurso | URL |
 |---------|-----|
-| Dashboard | https://coolify-admin.ouvir.online |
-| Servidor VPS | https://coolify-admin.ouvir.online/server/j8skk40s4ks048coog8gw08c |
-| Projetos | https://coolify-admin.ouvir.online/projects |
-| Servidores | https://coolify-admin.ouvir.online/servers |
-| Segurança | https://coolify-admin.ouvir.online/security |
+| Dashboard | https://coolify.querenhapuque.com/ |
+| Servidor VPS | https://coolify.querenhapuque.com/server/j8skk40s4ks048coog8gw08c |
+| Projetos | https://coolify.querenhapuque.com/projects |
+| Servidores | https://coolify.querenhapuque.com/servers |
+| Segurança | https://coolify.querenhapuque.com/security |
 | Hetzner Console | https://console.hetzner.com/projects/12020010/servers/110118995 |
 
 ---
