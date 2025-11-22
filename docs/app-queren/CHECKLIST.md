@@ -19,6 +19,9 @@
   - `Service Port`: `80`
   - `Domain`: `https://app.querenhapuque.com`
 - Deploy e acompanhar `Deployment Log`
+- Workflow manual (opcional): `Actions → Deploy to Coolify → Run workflow`
+  - `inputs.tag`: define a versão (ex.: SHA)
+  - `inputs.healthcheck_url`: sobrescreve URL usada no healthcheck
 
 ## Fallback via Compose
 - Diretório: `/srv/ap-queren-hapuque`
@@ -37,6 +40,7 @@ services:
       - "caddy=app.querenhapuque.com"
       - "caddy.encode=gzip"
       - "caddy.reverse_proxy={{upstreams 80}}"
+      - "caddy.try_files={path} /index.html"
 networks:
   coolify:
     external: true
@@ -53,11 +57,16 @@ networks:
   - `ssh queren-prod-43 'cd /srv/ap-queren-hapuque && docker compose down'`
 - Evitar dois recursos no mesmo domínio
 
+## Rollback
+- Rodar workflow manual com `inputs.tag` apontando para versão anterior
+- Alternativa no Coolify: mudar `Tag` do recurso Docker Image e `Deploy`
+
 ## Troubleshooting
 - `denied` no GHCR: configurar Registry com PAT ou tornar imagem pública
 - `manifest unknown`: publicar a tag usada (`latest` ou específica)
 - Domínio em conflito: desligar serviço antigo em `Site Queren Rapuque/production/Ap-Queren Hapuque`
 - TLS falhando: aguardar emissão/renovação pelo Caddy e revisar labels/rede
+ - `404` em rotas SPA (ex.: `/auth`): use `caddy.try_files={path} /index.html` ou configure fallback no Nginx; evitar `window.location.href` em links e preferir navegação client-side
 
 ## Segurança
 - Não versionar chaves/tokens

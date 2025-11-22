@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Ticket - Queren Hapuque VIII Conferência de Mulheres</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+        }
+        .ticket-card {
+            background: linear-gradient(to bottom right, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .dashed-divider {
+            position: relative;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dashed-divider::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: repeating-linear-gradient(90deg, #cbd5e0, #cbd5e0 5px, transparent 5px, transparent 10px);
+        }
+        .corner-circle {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+        }
+        .corner-circle.left {
+            left: -16px;
+        }
+        .corner-circle.right {
+            right: -16px;
+        }
+        .qr-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .qr-placeholder-inner {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .ticket-icon {
+            background: rgba(251, 146, 60, 0.1);
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .status-active {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .status-pending {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+        .status-cancelled {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-orange-50 to-cyan-50">
+    <div class="max-w-4xl w-full bg-white rounded-lg shadow-xl overflow-hidden ticket-card">
+        <!-- Header Section -->
+        <div class="p-6 pb-4">
+            <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 bg-orange-100 rounded-xl ticket-icon">
+                        <i class="fas fa-ticket-alt text-orange-500 text-xl"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 break-words">Queren Hapuque VIII Conferência de Mulheres</h1>
+                        <span class="status-badge status-active">Ingresso Padrão</span>
+                    </div>
+                </div>
+                <div class="sm:text-right text-left">
+                    <p class="text-sm text-gray-500">
+                        Preço Unitário
+                    </p>
+                    <p class="text-xl sm:text-2xl font-bold text-orange-500">R$ 90,00</p>
+                    <div class="mt-2 pt-2 border-t border-orange-200">
+                        <p class="text-xs text-gray-500">Valor Total do Pedido</p>
+                        <p class="text-lg font-bold text-green-600">R$ 90,00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashed Divider with Corner Circles -->
+        <div class="relative h-8 flex items-center justify-center dashed-divider">
+            <div class="corner-circle left"></div>
+            <div class="corner-circle right"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="p-6 pt-4">
+            <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-6">
+                <!-- Left Section - Event Details -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-calendar text-orange-500 mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Data do Evento</p>
+                                <p class="font-semibold text-gray-900">08/06/2024</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-clock text-orange-500 mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Horário</p>
+                                <p class="font-semibold text-gray-900">09:00</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt text-orange-500 mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Local</p>
+                                <p class="font-semibold text-gray-900">Teatro Municipal, Rua das Flores, 123 - Centro</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-user text-orange-500 mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Participante</p>
+                                <p class="font-semibold text-gray-900">Maria Silva</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-shopping-cart text-orange-500 mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Data de Compra</p>
+                                <p class="font-semibold text-gray-900">15/05/2024 14:30</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4 border-gray-200" />
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Número do Assento</span>
+                            <span class="font-mono text-lg font-bold text-orange-500">A-15</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">ID do ingresso</span>
+                            <span class="font-mono text-xs text-gray-900 opacity-60">ab12cd34-ef56-7890-ab12-cd34ef567890</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Status</span>
+                            <span class="status-badge status-active">Ativo</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Quantidade</span>
+                            <span class="font-semibold text-gray-900">1</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Email</span>
+                            <span class="font-semibold text-gray-900 text-sm">maria.silva@email.com</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Telefone</span>
+                            <span class="font-semibold text-gray-900">(11) 99999-9999</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section - QR Code -->
+                <div class="flex flex-col items-center justify-center p-6">
+                    <div class="qr-placeholder">
+                        <div class="qr-placeholder-inner">
+                            <!-- QR Code Placeholder -->
+                            <div class="flex flex-col items-center">
+                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-48 h-48 flex items-center justify-center text-gray-500">
+                                    <i class="fas fa-qrcode text-5xl"></i>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-500">Código QR do Ticket</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Notice -->
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <p class="text-xs text-gray-500 text-center">
+                    Apresente este ingresso (digital ou impresso) junto com um documento válido na entrada do local.
+                    Este ingresso é intransferível e válido apenas para uma entrada.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to simulate download ticket PDF
+        function downloadTicketPDF() {
+            alert("Funcionalidade de download do PDF ativada!");
+            // In a real implementation, this would generate and download a PDF
+        }
+    </script>
+</body>
+</html>

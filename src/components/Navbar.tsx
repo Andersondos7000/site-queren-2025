@@ -174,7 +174,7 @@ const Navbar: React.FC = () => {
               <Button 
                 variant="default" 
                 className="hidden md:flex"
-                onClick={() => window.location.href = '/auth'}
+                onClick={() => { enableScrollOnNextNavigation(); navigate('/auth'); }}
               >
                 Entrar
               </Button>

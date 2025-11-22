@@ -1,0 +1,194 @@
+services:
+  n8n:
+    image: 'docker.n8n.io/n8nio/n8n:latest'
+    restart: unless-stopped
+    networks:
+      coolify: null
+      z0k00g84cog4o8skc4s8o84k: null
+    environment:
+      N8N_HOST: aut.querenhapuque.com
+      N8N_PROTOCOL: https
+      EXECUTIONS_MODE: queue
+      N8N_RUNNERS_ENABLED: 'true'
+      WEBHOOK_URL: 'https://aut.querenhapuque.com'
+      N8N_EDITOR_BASE_URL: 'https://aut.querenhapuque.com'
+      N8N_ENCRYPTION_KEY: '${SERVICE_PASSWORD_ENCRYPTION}'
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: 'true'
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: 'true'
+      GENERIC_TIMEZONE: America/Sao_Paulo
+      TZ: America/Sao_Paulo
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: db
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: '${POSTGRES_DB}'
+      DB_POSTGRESDB_USER: '${POSTGRES_USER}'
+      DB_POSTGRESDB_PASSWORD: '${POSTGRES_PASSWORD}'
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      POSTGRES_DB: '${POSTGRES_DB}'
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+      COOLIFY_RESOURCE_UUID: z0k00g84cog4o8skc4s8o84k
+      COOLIFY_CONTAINER_NAME: n8n-z0k00g84cog4o8skc4s8o84k
+      COOLIFY_FQDN: aut.querenhapuque.com
+      COOLIFY_URL: 'https://aut.querenhapuque.com'
+      SERVICE_NAME_N8N: n8n
+      SERVICE_NAME_WORKER: worker
+      SERVICE_NAME_DB: db
+      SERVICE_NAME_REDIS: redis
+    container_name: n8n-z0k00g84cog4o8skc4s8o84k
+    labels:
+      - coolify.managed=true
+      - coolify.version=4.0.0-beta.442
+      - coolify.serviceId=1
+      - coolify.type=service
+      - coolify.name=n8n-z0k00g84cog4o8skc4s8o84k
+      - coolify.resourceName=httpsautquerenhapuquecom
+      - coolify.projectName=n8n-adm
+      - coolify.serviceName=n8n
+      - coolify.environmentName=n8n
+      - coolify.pullRequestId=0
+      - coolify.service.subId=1
+      - coolify.service.subType=application
+      - coolify.service.subName=n8n
+      - traefik.enable=true
+      - traefik.http.middlewares.gzip.compress=true
+      
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+      - traefik.http.routers.n8n.entryPoints=https
+      - traefik.http.routers.n8n.tls=true
+      - traefik.http.routers.n8n.tls.certresolver=letsencrypt
+      - 'traefik.http.routers.n8n.middlewares=redirect-to-https,gzip'
+      - 'traefik.http.routers.n8n.rule=Host(`aut.querenhapuque.com`)'
+      - 'traefik.http.services.n8n.loadbalancer.server.port=5678'
+      - traefik.docker.network=coolify
+      - traefik.http.routers.n8n-http.entryPoints=http
+      - 'traefik.http.routers.n8n-http.rule=Host(`aut.querenhapuque.com`)'
+      - 'traefik.http.routers.n8n-http.middlewares=redirect-to-https'
+      - 'caddy_0.encode=zstd gzip'
+      - 'caddy_0.handle_path.0_reverse_proxy={{upstreams 5678}}'
+      - 'caddy_0.handle_path=aut.querenhapuque.com*'
+      - caddy_0.header=-Server
+      - 'caddy_0.try_files={path} /index.html /index.php'
+      - 'caddy_0=://'
+      - caddy_ingress_network=z0k00g84cog4o8skc4s8o84k
+  worker:
+    image: 'docker.n8n.io/n8nio/n8n:latest'
+    restart: unless-stopped
+    command: ['/usr/local/bin/n8n','worker']
+    networks:
+      coolify: null
+      z0k00g84cog4o8skc4s8o84k: null
+    environment:
+      EXECUTIONS_MODE: queue
+      N8N_RUNNERS_ENABLED: 'true'
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: 'true'
+      N8N_HOST: aut.querenhapuque.com
+      N8N_PROTOCOL: https
+      WEBHOOK_URL: 'https://aut.querenhapuque.com'
+      N8N_EDITOR_BASE_URL: 'https://aut.querenhapuque.com'
+      N8N_ENCRYPTION_KEY: '${SERVICE_PASSWORD_ENCRYPTION}'
+      GENERIC_TIMEZONE: America/Sao_Paulo
+      TZ: America/Sao_Paulo
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: db
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: '${POSTGRES_DB}'
+      DB_POSTGRESDB_USER: '${POSTGRES_USER}'
+      DB_POSTGRESDB_PASSWORD: '${POSTGRES_PASSWORD}'
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      POSTGRES_DB: '${POSTGRES_DB}'
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+      COOLIFY_RESOURCE_UUID: z0k00g84cog4o8skc4s8o84k
+      COOLIFY_CONTAINER_NAME: worker-z0k00g84cog4o8skc4s8o84k
+      SERVICE_NAME_N8N: n8n
+      SERVICE_NAME_WORKER: worker
+      SERVICE_NAME_DB: db
+      SERVICE_NAME_REDIS: redis
+    container_name: worker-z0k00g84cog4o8skc4s8o84k
+    labels:
+      - coolify.managed=true
+      - coolify.version=4.0.0-beta.442
+      - coolify.serviceId=1
+      - coolify.type=service
+      - coolify.name=worker-z0k00g84cog4o8skc4s8o84k
+      - coolify.resourceName=httpsautquerenhapuquecom
+      - coolify.projectName=n8n-adm
+      - coolify.serviceName=worker
+      - coolify.environmentName=n8n
+      - coolify.pullRequestId=0
+      - coolify.service.subId=30
+      - coolify.service.subType=application
+      - coolify.service.subName=worker
+  db:
+    image: 'postgres:16-alpine'
+    restart: unless-stopped
+    networks:
+      coolify: null
+      z0k00g84cog4o8skc4s8o84k: null
+    environment:
+      POSTGRES_DB: '${POSTGRES_DB}'
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+      COOLIFY_RESOURCE_UUID: z0k00g84cog4o8skc4s8o84k
+      COOLIFY_CONTAINER_NAME: db-z0k00g84cog4o8skc4s8o84k
+      SERVICE_NAME_N8N: n8n
+      SERVICE_NAME_WORKER: worker
+      SERVICE_NAME_DB: db
+      SERVICE_NAME_REDIS: redis
+    volumes:
+      - 'z0k00g84cog4o8skc4s8o84k_db-data:/var/lib/postgresql/data'
+    container_name: db-z0k00g84cog4o8skc4s8o84k
+    labels:
+      - coolify.managed=true
+      - coolify.version=4.0.0-beta.442
+      - coolify.serviceId=1
+      - coolify.type=service
+      - coolify.name=db-z0k00g84cog4o8skc4s8o84k
+      - coolify.resourceName=httpsautquerenhapuquecom
+      - coolify.projectName=n8n-adm
+      - coolify.serviceName=db
+      - coolify.environmentName=n8n
+      - coolify.pullRequestId=0
+      - coolify.service.subId=12
+      - coolify.service.subType=database
+      - coolify.service.subName=db
+  redis:
+    image: 'redis:6-alpine'
+    restart: unless-stopped
+    networks:
+      coolify: null
+      z0k00g84cog4o8skc4s8o84k: null
+    container_name: redis-z0k00g84cog4o8skc4s8o84k
+    labels:
+      - coolify.managed=true
+      - coolify.version=4.0.0-beta.442
+      - coolify.serviceId=1
+      - coolify.type=service
+      - coolify.name=redis-z0k00g84cog4o8skc4s8o84k
+      - coolify.resourceName=httpsautquerenhapuquecom
+      - coolify.projectName=n8n-adm
+      - coolify.serviceName=redis
+      - coolify.environmentName=n8n
+      - coolify.pullRequestId=0
+      - coolify.service.subId=2
+      - coolify.service.subType=database
+      - coolify.service.subName=redis
+    environment:
+      COOLIFY_RESOURCE_UUID: z0k00g84cog4o8skc4s8o84k
+      COOLIFY_CONTAINER_NAME: redis-z0k00g84cog4o8skc4s8o84k
+      SERVICE_NAME_N8N: n8n
+      SERVICE_NAME_WORKER: worker
+      SERVICE_NAME_DB: db
+      SERVICE_NAME_REDIS: redis
+volumes:
+  z0k00g84cog4o8skc4s8o84k_db-data:
+    name: z0k00g84cog4o8skc4s8o84k_db-data
+networks:
+  coolify:
+    external: true
+  z0k00g84cog4o8skc4s8o84k:
+    name: z0k00g84cog4o8skc4s8o84k
+    external: true

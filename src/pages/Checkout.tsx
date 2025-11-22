@@ -9,6 +9,7 @@ import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import CustomerInformation from '@/components/checkout/CustomerInformation';
+import ParticipantsList from '@/components/checkout/ParticipantsList';
 import OrderSummary from '@/components/checkout/OrderSummary';
 import TermsSection from '@/components/checkout/TermsSection';
 import AdditionalNotes from '@/components/checkout/AdditionalNotes';
@@ -38,6 +39,14 @@ const checkoutFormSchema = z.object({
   terms: z.boolean().refine((val) => val === true, {
     message: "Você deve concordar com os termos de serviço",
   }),
+  participants: z.array(
+    z.object({
+      name: z.string().optional(),
+      cpf: z.string().optional(),
+      tshirt: z.string().optional(),
+      dress: z.string().optional(),
+    })
+  ).optional(),
 }).superRefine((data, ctx) => {
   if (data.personType === 'fisica') {
     const cpfLimpo = limparCpf(data.cpf);
@@ -72,6 +81,7 @@ const Checkout: React.FC = () => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [orderData, setOrderData] = useState<PixPaymentModalProps['orderData'] | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [participantCount, setParticipantCount] = useState(1);
 
   const form = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutFormSchema),
@@ -91,6 +101,7 @@ const Checkout: React.FC = () => {
       phone: '',
       additionalNotes: '',
       terms: false,
+      participants: [{ name: '', cpf: '', tshirt: '', dress: '' }],
     },
   });
 
@@ -184,6 +195,28 @@ const Checkout: React.FC = () => {
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const addParticipant = () => {
+    setParticipantCount((prev) => prev + 1);
+    const current = form.getValues().participants || [];
+    form.setValue('participants', [...current, { name: '', cpf: '', tshirt: '', dress: '' }]);
+  };
+
+  const removeParticipant = (index: number) => {
+    if (participantCount <= 1) return;
+    setParticipantCount((prev) => prev - 1);
+    const current = form.getValues().participants || [];
+    current.splice(index, 1);
+    form.setValue('participants', [...current]);
+  };
+
+  const handleImportParticipants = (participants: Array<{ name: string; cpf: string; tshirt: string; dress: string }>) => {
+    const current = form.getValues().participants || [];
+    const merged = [...current, ...participants];
+    form.setValue('participants', merged);
+    setParticipantCount(merged.length);
+    toast({ title: 'Participantes importados', description: `${participants.length} participante(s) adicionados.` });
   };
 
   const handlePaymentSuccess = async (paymentData: any) => {
@@ -317,6 +350,13 @@ const Checkout: React.FC = () => {
                 <div className="lg:col-span-2 space-y-6">
                   <CustomerInformation form={form} />
                   <AdditionalNotes form={form} />
+                  <ParticipantsList
+                    form={form}
+                    participantCount={participantCount}
+                    onAddParticipant={addParticipant}
+                    onRemoveParticipant={removeParticipant}
+                    onImportParticipants={handleImportParticipants}
+                  />
                   <TermsSection 
                     form={form}
                     total={total}

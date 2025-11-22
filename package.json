@@ -21,7 +21,10 @@
     "deploy:reconciliation": "bash scripts/deploy-reconciliation.sh deploy",
     "deploy:rollback": "bash scripts/deploy-reconciliation.sh rollback",
     "monitor:reconciliation": "bash scripts/monitor-reconciliation.sh check",
-    "monitor:watch": "bash scripts/monitor-reconciliation.sh watch"
+    "monitor:watch": "bash scripts/monitor-reconciliation.sh watch",
+    "send:example": "tsx src/send-example.ts",
+    "send:ticket-confirmation": "tsx src/send-ticket-confirmation-example.ts",
+    "mcp:resend": "tsx src/mcp/resend-server.ts"
   },
   "dependencies": {
     "@getbrevo/brevo": "^3.0.1",
@@ -70,6 +73,8 @@
     "express": "^5.1.0",
     "framer-motion": "^12.23.24",
     "helmet": "^8.1.0",
+    "html-to-text": "^9.0.5",
+    "juice": "^11.0.3",
     "lucide-react": "^0.263.1",
     "mercadopago": "^2.9.0",
     "node-cron": "^4.2.1",
@@ -139,4 +144,3 @@
   },
   "homepage": "https://github.com/Andersondos7000/borboleta-eventos-loja#readme"
 }
-

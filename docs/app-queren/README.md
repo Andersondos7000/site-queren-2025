@@ -17,6 +17,26 @@
 - Domínio `app.querenhapuque.com` apontando para o IP público do servidor.
 - (Para GHCR) Personal Access Token (PAT) do GitHub com escopo `read:packages` e imagem publicada com a tag utilizada.
 
+## Instalação Local e Build
+
+- Requisitos:
+  - Node.js 18+ e npm 10+
+  - Variáveis de ambiente para Vite:
+    - `VITE_SUPABASE_URL`
+    - `VITE_SUPABASE_ANON_KEY`
+    - `VITE_APP_NAME`
+    - `VITE_APP_VERSION`
+- Passos:
+  1. Instalar dependências:
+     - `npm install`
+  2. Desenvolvimento:
+     - `npm run dev` e acessar `http://localhost:5173`
+  3. Build de produção:
+     - `npm run build`
+     - Artefatos em `dist/`
+  4. Preview local do build:
+     - `npm run preview`
+
 ## Acesso SSH e Alias
 
 1. Criar/editar `%USERPROFILE%\.ssh\config`:
@@ -72,6 +92,7 @@ services:
       - "caddy=app.querenhapuque.com"
       - "caddy.encode=gzip"
       - "caddy.reverse_proxy={{upstreams 80}}"
+      - "caddy.try_files={path} /index.html"
 networks:
   coolify:
     external: true
@@ -95,6 +116,18 @@ ssh queren-prod-43 'cd /srv/ap-queren-hapuque && docker compose up -d && docker 
   - `COOLIFY_DEPLOY_URL` (webhook do recurso no Coolify)
   - `APP_HEALTHCHECK_URL` (rota pública de health)
 
+### Publicação em Produção — Passo a Passo
+
+1. Configurar Secrets no repositório (`Settings → Secrets and variables → Actions`):
+   - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_APP_NAME`, `VITE_APP_VERSION`
+   - `COOLIFY_DEPLOY_URL`, `APP_HEALTHCHECK_URL`
+2. Verificar que o workflow usa `platforms: linux/amd64` e publica no `ghcr.io`.
+3. Executar via push em `main` ou manualmente (`Actions → Deploy to Coolify → Run workflow`), definindo opcionalmente `inputs.tag` e `healthcheck_url`.
+4. Acompanhar os passos do workflow:
+   - Login no GHCR, build, push das tags e chamada ao webhook do Coolify.
+   - Healthcheck: retorna `2xx`/`3xx` para considerar saudável.
+5. Validar no Coolify o `Deployment Log` e o status da aplicação.
+
 ## Configurar Registry GHCR no Coolify
 
 1. Gerar PAT (classic) no GitHub com `read:packages`.
@@ -114,11 +147,30 @@ ssh queren-prod-43 'cd /srv/ap-queren-hapuque && docker compose up -d && docker 
    - `Domain`: `https://app.querenhapuque.com`
 3. `Deploy` e acompanhar `Deployment Log`.
 
+### Rollback e Versionamento
+
+- Workflow manual com `inputs.tag`:
+  - Use a tag de um commit anterior (por exemplo, o SHA publicado) e rode `workflow_dispatch` para implantar aquela versão.
+- No Coolify:
+  - Atualize a `Tag` do recurso Docker Image para a versão desejada e faça `Deploy`.
+- Fallback (se necessário):
+  - `ssh queren-prod-43 'cd /srv/ap-queren-hapuque && docker compose up -d'` com artefato `dist/` anterior.
+
+## Operação e Observabilidade
+
+- Logs:
+  - Coolify exibe logs do serviço e do proxy Caddy.
+- Healthcheck:
+  - Configure `APP_HEALTHCHECK_URL` para rota pública de verificação.
+- Backups:
+  - Habilite backups no Coolify (se aplicável) e registre o procedimento de restore.
+
 ### Erros comuns
 
 - `denied` ao baixar do GHCR: falta de PAT ou pacote privado sem permissão.
 - `manifest unknown`: a tag (ex.: `latest`) não foi publicada; publique via workflow ou defina uma tag existente.
 - Conflito de domínio: se existir um serviço anterior (`Ap-Queren Hapuque`) usando o mesmo domínio, remova ou desligue para evitar rotas conflitantes.
+- `404` em rotas SPA (ex.: `/auth`): adicionar label `caddy.try_files={path} /index.html` ou configurar fallback no Nginx para servir `index.html`; também evitar `window.location.href` e usar navegação client-side (`navigate('/auth')`).
 
 ## Validação
 
@@ -151,6 +203,12 @@ ssh queren-prod-43 'cd /srv/ap-queren-hapuque && docker compose down'
 - Coolify (novo domínio): `https://coolify.querenhapuque.com/`
 - Workflow CI: `.github/workflows/deploy-coolify.yml`
 - Documentação do servidor: `docs/hetzner/queren-prod-43.md`
+
+## Guia Rápido — Produção
+
+- CI/CD publica imagem no GHCR e aciona redeploy no Coolify.
+- Coolify entrega via Caddy no domínio `app.querenhapuque.com`.
+- Em caso de falha de imagem/tag, usar fallback Compose servindo `dist/` na rede `coolify` com labels Caddy.
  
 ## Registro de Execução e Decisões
 

@@ -310,6 +310,22 @@ app.post('/api/abacatepay/list-billings', async (req, res) => {
 // Webhook endpoint
 app.post('/api/webhook/abacatepay', webhookAbacatePayMiddleware);
 
+// Webhook Resend: recebe eventos de envio/entrega/erro
+app.post('/api/webhook/resend', async (req, res) => {
+  try {
+    const event = req.body as any
+    console.log('📬 Webhook Resend recebido:', {
+      type: event?.type,
+      created_at: event?.created_at,
+      data_summary: event?.data ? Object.keys(event.data) : []
+    })
+    res.status(200).json({ ok: true })
+  } catch (e: any) {
+    console.error('Erro no webhook Resend:', e?.message || String(e))
+    res.status(500).json({ error: 'internal_error' })
+  }
+});
+
 // Endpoint para testar conectividade
 app.get('/api/abacatepay/test', async (req, res) => {
   try {
@@ -381,6 +397,7 @@ app.listen(PORT, () => {
   console.log(`💰 Criar Cobrança: POST http://localhost:${PORT}/api/abacatepay/criar-cobranca`);
   console.log(`🔍 Consultar Cobrança: GET http://localhost:${PORT}/api/abacatepay/consultar-cobranca/:id`);
   console.log(`📨 Webhook: POST http://localhost:${PORT}/api/webhook/abacatepay`);
+  console.log(`📨 Webhook Resend: POST http://localhost:${PORT}/api/webhook/resend`);
   console.log(`🧪 Teste: GET http://localhost:${PORT}/api/abacatepay/test`);
   console.log('');
   console.log('⚠️  IMPORTANTE: Configure as variáveis de ambiente:');

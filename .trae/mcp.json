@@ -9,6 +9,13 @@
       "env": {
         "ECOMMERCE_API_KEY": "sua_chave_ecommerce_aqui"
       }
+    },
+    "playwright-extension": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--extension"
+      ]
     }
   }
 }
