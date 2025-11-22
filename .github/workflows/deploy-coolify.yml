@@ -32,7 +32,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push image
+      - name: Build and push image (with secrets)
+        if: ${{ secrets.VITE_SUPABASE_URL != '' && secrets.VITE_SUPABASE_ANON_KEY != '' }}
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -44,6 +45,14 @@ jobs:
             VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
             VITE_APP_NAME=${{ secrets.VITE_APP_NAME }}
             VITE_APP_VERSION=${{ secrets.VITE_APP_VERSION }}
+      - name: Build and push image (fallback without secrets)
+        if: ${{ secrets.VITE_SUPABASE_URL == '' || secrets.VITE_SUPABASE_ANON_KEY == '' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          tags: ghcr.io/${{ env.REPO_OWNER_LC }}/borboleta-eventos-loja:${{ github.sha }},ghcr.io/${{ env.REPO_OWNER_LC }}/borboleta-eventos-loja:${{ inputs.tag || 'latest' }}
       - name: Trigger Coolify redeploy
         if: ${{ secrets.COOLIFY_DEPLOY_URL != '' }}
         id: redeploy
