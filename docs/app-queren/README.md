@@ -8,7 +8,16 @@
   - Painel Coolify: `https://coolify.querenhapuque.com/`
   - Proxy: Caddy (via Coolify Proxy)
   - Registro de imagens: GHCR (`ghcr.io`)
-  - CI/CD: GitHub Actions (`.github/workflows/deploy-coolify.yml`)
+- CI/CD: GitHub Actions (`.github/workflows/deploy-coolify.yml`)
+
+## Fluxo Rápido — Local → Produção
+
+- Local: `npm run dev` → `npm run build` → `npm run preview` com `VITE_*` definidos.
+- Push: `git push origin main` dispara o workflow de deploy.
+- Build: imagem em `ghcr.io/<owner>/borboleta-eventos-loja` (tags `latest` e `SHA`, owner em minúsculas) com `VITE_*` via Secrets.
+- Redeploy: webhook `COOLIFY_DEPLOY_URL` (com `Authorization: Bearer COOLIFY_API_TOKEN` se existir).
+- Produção: Coolify puxa a imagem e entrega via Caddy em `https://app.querenhapuque.com` com Healthcheck GET `/`.
+- Rollback: executar workflow manual com `inputs.tag` (um `SHA`) ou trocar `Tag` no recurso do Coolify.
 
 ## Pré‑requisitos
 
@@ -109,22 +118,33 @@ ssh queren-prod-43 'cd /srv/ap-queren-hapuque && docker compose up -d && docker 
     - Tags: `ghcr.io/<owner>/borboleta-eventos-loja:${{ github.sha }}` e `:latest` (ou `inputs.tag`)
     - `platforms: linux/amd64`
     - Cache GHA: `cache-from/cache-to`
+    - Normalização do owner: `${GITHUB_REPOSITORY_OWNER,,}` para evitar erro de tag com maiúsculas
   - Redeploy: POST em `COOLIFY_DEPLOY_URL`
+    - Autorização opcional via `Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}`
   - Healthcheck: usa `APP_HEALTHCHECK_URL` ou `inputs.healthcheck_url`
 - Secrets necessários (GitHub):
   - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_APP_NAME`, `VITE_APP_VERSION`
   - `COOLIFY_DEPLOY_URL` (webhook do recurso no Coolify)
   - `APP_HEALTHCHECK_URL` (rota pública de health)
+  - `COOLIFY_API_TOKEN` (token de API do Coolify para autenticação do webhook)
+
+### Regras de Build e Variáveis
+
+- Dockerfile exige `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` em build‑time; se ausentes, o build falha.
+- `src/lib/config/envConfig.ts` valida as variáveis em tempo de execução do bundle; o erro no console indica falta na fase de build.
+- Variáveis VITE_* não são lidas do runtime do container Nginx; devem vir incorporadas no build.
 
 ### Publicação em Produção — Passo a Passo
 
 1. Configurar Secrets no repositório (`Settings → Secrets and variables → Actions`):
    - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_APP_NAME`, `VITE_APP_VERSION`
-   - `COOLIFY_DEPLOY_URL`, `APP_HEALTHCHECK_URL`
+   - `COOLIFY_DEPLOY_URL`, `APP_HEALTHCHECK_URL`, `COOLIFY_API_TOKEN`
 2. Verificar que o workflow usa `platforms: linux/amd64` e publica no `ghcr.io`.
+   - Confirmar normalização do owner com `${GITHUB_REPOSITORY_OWNER,,}` nas tags.
 3. Executar via push em `main` ou manualmente (`Actions → Deploy to Coolify → Run workflow`), definindo opcionalmente `inputs.tag` e `healthcheck_url`.
 4. Acompanhar os passos do workflow:
    - Login no GHCR, build, push das tags e chamada ao webhook do Coolify.
+   - Webhook com Bearer quando `COOLIFY_API_TOKEN` estiver presente.
    - Healthcheck: retorna `2xx`/`3xx` para considerar saudável.
 5. Validar no Coolify o `Deployment Log` e o status da aplicação.
 
@@ -169,6 +189,7 @@ ssh queren-prod-43 'cd /srv/ap-queren-hapuque && docker compose up -d && docker 
 
 - `denied` ao baixar do GHCR: falta de PAT ou pacote privado sem permissão.
 - `manifest unknown`: a tag (ex.: `latest`) não foi publicada; publique via workflow ou defina uma tag existente.
+  - Também ocorre se o owner tiver maiúsculas; normalize com `${GITHUB_REPOSITORY_OWNER,,}`.
 - Conflito de domínio: se existir um serviço anterior (`Ap-Queren Hapuque`) usando o mesmo domínio, remova ou desligue para evitar rotas conflitantes.
 - `404` em rotas SPA (ex.: `/auth`): adicionar label `caddy.try_files={path} /index.html` ou configurar fallback no Nginx para servir `index.html`; também evitar `window.location.href` e usar navegação client-side (`navigate('/auth')`).
 
@@ -183,6 +204,8 @@ nslookup app.querenhapuque.com
 ssh queren-prod-43 'curl -s -o /dev/null -w "%{http_code}\n" https://app.querenhapuque.com/'
 ```
 - Navegador: acessar `https://app.querenhapuque.com/` e verificar carregamento (200).
+- Coolify: Healthcheck habilitado (GET `/`) com status `Healthy`.
+- Unmanaged: confirmar ausência de recursos não‑gerenciados para este domínio.
 
 ## Limpeza (pós‑migração para GHCR)
 
@@ -214,10 +237,11 @@ ssh queren-prod-43 'cd /srv/ap-queren-hapuque && docker compose down'
 
 - Proxy: migrado para Caddy no servidor `queren-prod-43` e validado em estado `Proxy Running`.
 - Fallback: publicado via Docker Compose com Nginx servindo `dist/` na rede `coolify` e labels Caddy para `app.querenhapuque.com`.
-- Coolify: removido recurso antigo “Ap-Queren Hapuque” para eliminar conflito de domínio; mantido o recurso Docker Image atual.
+ - Coolify: removido recurso antigo `ap-queren-hapuque-web-1` para eliminar conflito de domínio; mantido o recurso Docker Image atual.
 - GHCR: autenticado com PAT `read:packages`; identificado erro `manifest unknown` devido à ausência da tag `latest` publicada.
-- CI: ajustado workflow para publicar `latest`, habilitar cache e plataforma `amd64` — ver `j:\Protegido\queren2\querenhapuque\.github\workflows\deploy-coolify.yml:37` onde está `platforms: linux/amd64`.
+- CI: ajustado workflow para publicar `latest`, habilitar cache, `platforms: linux/amd64` e normalização de owner.
 - Healthcheck: corrigida condição de execução para usar `github.event.inputs.healthcheck_url` ou `APP_HEALTHCHECK_URL`.
+- Webhook: acionado com `Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}` quando disponível.
 - Validação: acesso HTTPS confirmado em `https://app.querenhapuque.com` com carregamento da SPA e navegação básica.
 
 ### Estado Atual

@@ -112,6 +112,21 @@ ssh vps-hetzner
 - Imagens Docker
 - Builds customizados
 
+### 🚀 Deploy da APP‑QUEREN (GHCR + Coolify)
+
+- Local: `npm run dev` → `npm run build` → `npm run preview` com `VITE_*` definidos.
+- Push: `git push origin main` dispara `/.github/workflows/deploy-coolify.yml`.
+- Build: imagem publicada em `ghcr.io/<owner>/borboleta-eventos-loja` com tags `latest` e `${SHA}`;
+  - owner normalizado em minúsculas no workflow.
+- Redeploy: Coolify aciona via webhook `COOLIFY_DEPLOY_URL` (Authorization Bearer opcional com `COOLIFY_API_TOKEN`).
+- Produção: aplicação Docker Image no projeto “Site Queren Rapuque” entrega via proxy em `https://app.querenhapuque.com`.
+- Healthcheck: habilitado (GET `/`) no recurso; aguardar status `Healthy`.
+- Rollback: rodar o workflow manual com `inputs.tag` (SHA) ou trocar a `Tag` no recurso Docker Image e redeploy.
+
+Referências detalhadas:
+- `docs/app-queren/README.md` — Guia completo do fluxo Local → Produção
+- `docs/app-queren/CHECKLIST.md` — Checklist operacional e validação
+
 ### Gerenciamento
 - Banco de dados (PostgreSQL, MySQL, MongoDB, etc.)
 - Volumes persistentes

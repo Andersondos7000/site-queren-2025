@@ -10,6 +10,18 @@
         "ECOMMERCE_API_KEY": "sua_chave_ecommerce_aqui"
       }
     },
+    "resend": {
+      "command": "npx",
+      "args": [
+        "tsx",
+        "src/mcp/resend-server.ts"
+      ],
+      "env": {
+        "RESEND_API_KEY": "${RESEND_API_KEY}",
+        "SENDER_EMAIL": "${SENDER_EMAIL}",
+        "SENDER_NAME": "${SENDER_NAME}"
+      }
+    },
     "playwright-extension": {
       "command": "npx",
       "args": [

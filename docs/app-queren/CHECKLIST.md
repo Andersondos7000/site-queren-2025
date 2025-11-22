@@ -1,5 +1,12 @@
 # Checklist de Operação — APP-QUEREN
 
+## Checklist Express
+- Local: `npm run dev` → `npm run build` → `npm run preview` com `VITE_*`.
+- Push: `git push origin main` para acionar o workflow.
+- GHCR: imagem publicada com tags `latest` e `SHA` (owner minúsculo).
+- Coolify: webhook de redeploy (`COOLIFY_DEPLOY_URL` + Bearer se disponível).
+- Health: status `Healthy` (GET `/`) e logs sem erros.
+- Rollback: usar `inputs.tag` (SHA) ou trocar `Tag` no Coolify.
 ## Pré‑Deploy
 - Validar SSH: `ssh queren-prod-43 "whoami && hostname"`
 - Confirmar domínio: `nslookup app.querenhapuque.com` → IP do servidor
@@ -11,6 +18,7 @@
 - Publicar imagem pelo CI (`.github/workflows/deploy-coolify.yml`):
   - Tags: `ghcr.io/<owner>/borboleta-eventos-loja:<sha>` e `:latest`
   - `platforms: linux/amd64` e cache GHA ativado
+  - Normalizar owner: `${GITHUB_REPOSITORY_OWNER,,}` para evitar inconsistência de tags
 - Coolify → Keys & Tokens → Registries:
   - Adicionar `ghcr.io` com usuário GitHub e PAT `read:packages`
 - Aplicação Docker Image:
@@ -22,6 +30,7 @@
 - Workflow manual (opcional): `Actions → Deploy to Coolify → Run workflow`
   - `inputs.tag`: define a versão (ex.: SHA)
   - `inputs.healthcheck_url`: sobrescreve URL usada no healthcheck
+ - Webhook: `COOLIFY_DEPLOY_URL` e opcional `COOLIFY_API_TOKEN` para Authorization Bearer
 
 ## Fallback via Compose
 - Diretório: `/srv/ap-queren-hapuque`
@@ -51,11 +60,18 @@ networks:
 - Servidor: `curl -s -o /dev/null -w "%{http_code}\n" https://app.querenhapuque.com/` → `200`
 - Navegador: acessar `https://app.querenhapuque.com/`
 - Coolify Logs: sem erros em proxy e aplicação
+ - Healthcheck: habilitado (GET `/`) e status `Healthy`
+ - Unmanaged: confirmar que `ap-queren-hapuque-web-1` foi removido e não há recursos conflitantes
 
 ## Limpeza
 - Após migrar para GHCR, remover fallback:
   - `ssh queren-prod-43 'cd /srv/ap-queren-hapuque && docker compose down'`
 - Evitar dois recursos no mesmo domínio
+
+## Build e Variáveis
+- Dockerfile exige `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` em build‑time.
+- `VITE_APP_NAME` e `VITE_APP_VERSION` também devem estar presentes.
+- Variáveis VITE_* não são lidas em runtime do Nginx; precisam ser injetadas no build.
 
 ## Rollback
 - Rodar workflow manual com `inputs.tag` apontando para versão anterior
