@@ -57,7 +57,11 @@ jobs:
         if: ${{ secrets.COOLIFY_DEPLOY_URL != '' }}
         id: redeploy
         run: |
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${{ secrets.COOLIFY_DEPLOY_URL }}")
+          if [ -n "${{ secrets.COOLIFY_API_TOKEN }}" ]; then
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${{ secrets.COOLIFY_DEPLOY_URL }}" -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}")
+          else
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${{ secrets.COOLIFY_DEPLOY_URL }}")
+          fi
           echo "HTTP_CODE=$CODE" >> $GITHUB_OUTPUT
           if [ "$CODE" -lt 200 ] || [ "$CODE" -ge 300 ]; then
             echo "Coolify redeploy failed with HTTP $CODE"
