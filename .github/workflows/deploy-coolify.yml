@@ -45,6 +45,7 @@ jobs:
             VITE_APP_NAME=${{ secrets.VITE_APP_NAME }}
             VITE_APP_VERSION=${{ secrets.VITE_APP_VERSION }}
       - name: Trigger Coolify redeploy
+        if: ${{ secrets.COOLIFY_DEPLOY_URL != '' }}
         id: redeploy
         run: |
           CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${{ secrets.COOLIFY_DEPLOY_URL }}")
